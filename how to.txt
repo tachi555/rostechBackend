@@ -1,0 +1,9 @@
+command build run : ./mvnw spring-boot:run
+
+server.port=${port:8081}
+
+tambahkan scan component di java file @SpringBootApplication biasanya di ApiApplication.java:
+import org.springframework.context.annotation.ComponentScan;
+
+@SpringBootApplication
+@ComponentScan(basePackages= {"com.example"})
