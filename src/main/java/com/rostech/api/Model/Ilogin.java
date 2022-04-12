@@ -13,23 +13,28 @@ import java.util.Date;
  */
 public class Ilogin extends Result {
     private Long id;
-    private String nama;
     private String pass;
     private Date tanggal;
     private String status;
-    private String role;
     private Date tanggal_out;
 
     public Ilogin() {
     }
 
-    public Ilogin(Long id, String nama, String pass, Date tanggal, String status, String role, Date tanggal_out) {
+    public Ilogin(Long id, String pass, Date tanggal, String status, Date tanggal_out) {
         this.id = id;
-        this.nama = nama;
         this.pass = pass;
         this.tanggal = tanggal;
         this.status = status;
-        this.role = role;
+        this.tanggal_out = tanggal_out;
+    }
+
+    public Ilogin(Long id, String pass, Date tanggal, String status, Date tanggal_out, Integer isSuccess, String notes, String ip, String token, String nama, String role, String user_id, String group_id) {
+        super(isSuccess, notes, ip, token, nama, role, user_id, group_id);
+        this.id = id;
+        this.pass = pass;
+        this.tanggal = tanggal;
+        this.status = status;
         this.tanggal_out = tanggal_out;
     }
 
@@ -40,24 +45,6 @@ public class Ilogin extends Result {
     public void setTanggal_out(Date tanggal_out) {
         this.tanggal_out = tanggal_out;
     }
-
-    public Ilogin(Long id, String nama, String pass, Date tanggal, String status, String role, Integer isSuccess, String notes, String ip, String token) {
-        super(isSuccess, notes, ip, token);
-        this.id = id;
-        this.nama = nama;
-        this.pass = pass;
-        this.tanggal = tanggal;
-        this.status = status;
-        this.role = role;
-    }
-    
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
     
     public Long getId() {
         return id;
@@ -65,14 +52,6 @@ public class Ilogin extends Result {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getNama() {
-        return nama;
-    }
-
-    public void setNama(String nama) {
-        this.nama = nama;
     }
 
     public String getPass() {

@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class Material extends Result {
     private Long mid;
-    private String nama;
+    private String mnama;
     private String type;
     private String ukuran;
     private Date tanggal;
@@ -24,9 +24,10 @@ public class Material extends Result {
     public Material() {
     }
 
-    public Material(Long mid, String nama, String type, String ukuran, Date tanggal, Integer jumlah, Integer total, String ket) {
+    public Material(Long mid, String mnama, String type, String ukuran, Date tanggal, Integer jumlah, Integer total, String ket, Integer isSuccess, String notes, String ip, String token, String nama, String role, String user_id, String group_id) {
+        super(isSuccess, notes, ip, token, nama, role, user_id, group_id);
         this.mid = mid;
-        this.nama = nama;
+        this.mnama = mnama;
         this.type = type;
         this.ukuran = ukuran;
         this.tanggal = tanggal;
@@ -35,16 +36,12 @@ public class Material extends Result {
         this.ket = ket;
     }
 
-    public Material(Long mid, String nama, String type, String ukuran, Date tanggal, Integer jumlah, Integer total, String ket, Integer isSuccess, String notes, String ip, String token) {
-        super(isSuccess, notes, ip, token);
-        this.mid = mid;
-        this.nama = nama;
-        this.type = type;
-        this.ukuran = ukuran;
-        this.tanggal = tanggal;
-        this.jumlah = jumlah;
-        this.total = total;
-        this.ket = ket;
+    public String getMnama() {
+        return mnama;
+    }
+
+    public void setMnama(String mnama) {
+        this.mnama = mnama;
     }
     
     public Long getMid() {
@@ -53,14 +50,6 @@ public class Material extends Result {
 
     public void setMid(Long mid) {
         this.mid = mid;
-    }
-
-    public String getNama() {
-        return nama;
-    }
-
-    public void setNama(String nama) {
-        this.nama = nama;
     }
 
     public String getType() {

@@ -40,6 +40,8 @@ public class GreetingController {
 //    private final String cors = "54.169.128.87:8080";
     private final String cors = "*";
     private final PlatformTransactionManager transactionManager;
+//    private final String url = "api/";
+    private final String url = "";
 
     public GreetingController(ArticleMapper articleMapper ,PlatformTransactionManager transactionManager) {
         this.transactionManager = transactionManager;
@@ -61,15 +63,27 @@ public class GreetingController {
         System.out.println("End logging");
 //        java.util.logging.Logger.getLogger(GreetingController.class.getName()).log(Level.SEVERE, null, e);
     }
+    
+    private int checkLogin(Result result) throws Exception{
+        if(null == result || result.getIp().isEmpty() || result.getIp().isBlank() || result.getToken().isEmpty() || result.getToken().isBlank())
+        {
+            throw new Exception("Please login");
+        } else if (1 == this.articleMapper.stillLogin(result.getIp(), result.getToken()).getIsSuccess()){
+
+            return 1;
+        } else {
+            throw new Exception("Please login");
+        }
+    }
 
     @CrossOrigin(origins = cors)
-    @GetMapping("/greeting")
+    @GetMapping(url+"/greeting")
     public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
             return new Greeting(1, "Hello World!");
     }
     
     @CrossOrigin(origins = cors)
-    @PostMapping("/getLastPrice")
+    @PostMapping(url+"/getLastPrice")
     public Pembelian getLastPrice(@RequestBody Material material) {
         Pembelian  hasil = new Pembelian();
         try {
@@ -83,12 +97,12 @@ public class GreetingController {
     }
     
     @CrossOrigin(origins = cors)
-    @PostMapping("/listmaterial")
+    @PostMapping(url+"/listmaterial")
     public ArrayList<Material> listmaterial(@RequestBody Material material) {
         ArrayList<Material>  hasil = new ArrayList<>();
         try {
             checkLogin(material);
-            hasil = this.articleMapper.getMaterialList();
+            hasil = this.articleMapper.getMaterialList(material.getMnama());
 
         } catch (Exception ex) {
             printStackTrace(ex);
@@ -98,13 +112,12 @@ public class GreetingController {
     }
     
     @CrossOrigin(origins = cors)
-    @PostMapping("/getAutoMaterial")
+    @PostMapping(url+"/getAutoMaterial")
     public ArrayList<String> getAutoMaterial(@RequestBody Material material) {
         ArrayList<String>  hasil = new ArrayList<>();
         try {
             checkLogin(material);
-            hasil = this.articleMapper.getAutoMaterial("%"+material.getNama()+"%");
-            
+            hasil = this.articleMapper.getAutoMaterial("%"+material.getMnama()+"%");
         } catch (Exception ex) {
             printStackTrace(ex);
         }
@@ -113,7 +126,7 @@ public class GreetingController {
     }
     
     @CrossOrigin(origins = cors)
-    @PostMapping("/getComboMaterial")
+    @PostMapping(url+"/getComboMaterial")
     public ArrayList<Material> getComboMaterial(@RequestBody Material material) {
         ArrayList<Material>  hasil = new ArrayList<>();
         try {
@@ -129,7 +142,7 @@ public class GreetingController {
     
     @Transactional
     @CrossOrigin(origins = cors)
-    @PostMapping("/insertmaterial")
+    @PostMapping(url+"/insertmaterial")
     public Integer insertmaterial(@RequestBody Material material) {
         TransactionStatus txStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
         Integer hasil = 0;
@@ -150,7 +163,7 @@ public class GreetingController {
     
     @Transactional
     @CrossOrigin(origins = cors)
-    @PostMapping("/editMaterial")
+    @PostMapping(url+"/editMaterial")
     public Integer editMaterial(@RequestBody Material material) {
         TransactionStatus txStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
         Integer hasil = 0;
@@ -165,24 +178,24 @@ public class GreetingController {
     }
 
     @CrossOrigin(origins = cors)
-    @GetMapping("/getTotalMaterial")
+    @GetMapping(url+"/getTotalMaterial")
     public Integer getTotalMaterial() {
             return this.articleMapper.getTotalMaterial();
     }
 
     @CrossOrigin(origins = cors)
-    @GetMapping("/getMaterialListPerPage")
+    @GetMapping(url+"/getMaterialListPerPage")
     public ArrayList<Material> getMaterialListPerPage(@RequestParam(value = "offset", defaultValue = "0") Integer offset, @RequestParam(value = "limit", defaultValue = "10") Integer limit) {
             return this.articleMapper.getMaterialListPerPage(offset, limit);
     }
     
     @CrossOrigin(origins = cors)
-    @PostMapping("/listToko")
+    @PostMapping(url+"/listToko")
     public ArrayList<Toko> listToko(@RequestBody Toko toko) {
         ArrayList<Toko>  hasil = new ArrayList<>();
         try {
             checkLogin(toko);
-            hasil = this.articleMapper.getTokoList();
+            hasil = this.articleMapper.getTokoList(toko.getTnama());
             
         } catch (Exception ex) {
             printStackTrace(ex);
@@ -192,7 +205,7 @@ public class GreetingController {
     }
     
     @CrossOrigin(origins = cors)
-    @PostMapping("/getComboToko")
+    @PostMapping(url+"/getComboToko")
     public ArrayList<Toko> getComboToko(@RequestBody Toko toko) {
         ArrayList<Toko>  hasil = new ArrayList<>();
         try {
@@ -207,7 +220,7 @@ public class GreetingController {
     }
     
     @CrossOrigin(origins = cors)
-    @PostMapping("/getAutoToko")
+    @PostMapping(url+"/getAutoToko")
     public ArrayList<String> getAutoToko(@RequestBody Toko toko) {
         ArrayList<String>  hasil = new ArrayList<>();
         try {
@@ -223,7 +236,7 @@ public class GreetingController {
     
     @Transactional
     @CrossOrigin(origins = cors)
-    @PostMapping("/insertToko")
+    @PostMapping(url+"/insertToko")
     public Integer insertToko(@RequestBody Toko toko) {
         TransactionStatus txStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
         Integer hasil = 0;
@@ -244,7 +257,7 @@ public class GreetingController {
     
     @Transactional
     @CrossOrigin(origins = cors)
-    @PostMapping("/editToko")
+    @PostMapping(url+"/editToko")
     public Integer editToko(@RequestBody Toko toko) {
         TransactionStatus txStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
         Integer hasil = 0;
@@ -259,12 +272,12 @@ public class GreetingController {
     }
     
     @CrossOrigin(origins = cors)
-    @PostMapping("/getHarga")
+    @PostMapping(url+"/getHarga")
     public ArrayList<Pembelian> getHarga(@RequestBody Pembelian harga) {
         ArrayList<Pembelian>  hasil = new ArrayList<>();
         try {
             checkLogin(harga);
-            hasil = this.articleMapper.getHarga();
+            hasil = this.articleMapper.getHarga(harga.getMnama());
             
         } catch (Exception ex) {
             printStackTrace(ex);
@@ -273,7 +286,86 @@ public class GreetingController {
     }
     
     @CrossOrigin(origins = cors)
-    @PostMapping("/getHargaByMaterialId")
+    @PostMapping(url+"/getPembelianBetweenDate")
+    public ArrayList<Pembelian> getPembelianBetweenDate(@RequestBody Pembelian pembelian) {
+        ArrayList<Pembelian> hasil = new ArrayList<>();
+        try {
+            checkLogin(pembelian);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(pembelian.getFrom());
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            pembelian.setFrom(cal.getTime());
+            cal.setTime(pembelian.getTo());
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 59);
+            cal.set(Calendar.MILLISECOND, 999);
+            pembelian.setTo(cal.getTime());
+            hasil = this.articleMapper.getPembelianBetweenDate(pembelian);
+            
+        } catch (Exception ex) {
+            printStackTrace(ex);
+        }
+        return hasil;
+    }
+    
+    @CrossOrigin(origins = cors)
+    @PostMapping(url+"/getTotalPembelianBetweenDate")
+    public ArrayList<Pembelian> getTotalPembelianBetweenDate(@RequestBody Pembelian pembelian) {
+        ArrayList<Pembelian> hasil = new ArrayList<>();
+        try {
+            checkLogin(pembelian);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(pembelian.getFrom());
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            pembelian.setFrom(cal.getTime());
+            cal.setTime(pembelian.getTo());
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 59);
+            cal.set(Calendar.MILLISECOND, 999);
+            pembelian.setTo(cal.getTime());
+            hasil = this.articleMapper.getTotalPembelianBetweenDate(pembelian);
+            
+        } catch (Exception ex) {
+            printStackTrace(ex);
+        }
+        return hasil;
+    }
+    
+    @CrossOrigin(origins = cors)
+    @PostMapping(url+"/getTotalPembelianCurrentMonth")
+    public ArrayList<Pembelian> getTotalPembelianCurrentMonth(@RequestBody Pembelian pembelian) {
+        ArrayList<Pembelian> hasil = new ArrayList<>();
+        try {
+            checkLogin(pembelian);
+            Calendar from = Calendar.getInstance();
+            from.set(from.get(Calendar.YEAR), from.get(Calendar.MONTH), 1,0,0,0);
+            Calendar to = Calendar.getInstance();
+            to.set(to.get(Calendar.YEAR), to.get(Calendar.MONTH), to.getActualMaximum(Calendar.DATE),23,59,59);
+            pembelian.setFrom(Calendar.getInstance().getTime());
+            pembelian.setFrom(from.getTime());
+            pembelian.setTo(to.getTime());
+            hasil = this.articleMapper.getTotalPembelianBetweenDate(pembelian);
+            if(hasil.size()>0){
+                hasil.get(0).setFrom(from.getTime());
+                hasil.get(0).setTo(to.getTime());
+            }
+            System.out.println("from : " +from.getTime().toString() + " to : " +to.getTime().toString());
+        } catch (Exception ex) {
+            printStackTrace(ex);
+        }
+        return hasil;
+    }
+    
+    @CrossOrigin(origins = cors)
+    @PostMapping(url+"/getHargaByMaterialId")
     public ArrayList<Pembelian> getHargaByMaterialId(@RequestBody Pembelian harga) {
         ArrayList<Pembelian>  hasil = new ArrayList<>();
         try {
@@ -287,7 +379,7 @@ public class GreetingController {
     
     @Transactional
     @CrossOrigin(origins = cors)
-    @PostMapping("/inputPembelian")
+    @PostMapping(url+"/inputPembelian")
     public Integer inputPembelian(@RequestBody Pembelian pembelian) {
         TransactionStatus txStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
         Integer hasil = 0;
@@ -316,13 +408,14 @@ public class GreetingController {
     }
     @Transactional
     @CrossOrigin(origins = cors)
-    @PostMapping("/editPembelian")
+    @PostMapping(url+"/editPembelian")
     public Integer editPembelian(@RequestBody Pembelian pembelian) {
         TransactionStatus txStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
         Integer hasil = 0;
         Integer hasil1 = 0;
         Integer hasil2 = 0;
         Integer hasil3 = 0;
+        Integer hasil4 = 0;
         try{
             if(checkLogin(pembelian) == 2)
             {
@@ -330,10 +423,15 @@ public class GreetingController {
             }
             pembelian.setMnama("");
             pembelian.setTnama("");
-            hasil2 = this.articleMapper.removeStockWithPembelianId(pembelian);
+            System.out.println("1");
+            hasil1 = this.articleMapper.removeStockWithPembelianId(pembelian);
+            System.out.println("2");
+            hasil4 = this.articleMapper.removeStockWithPembelianId(pembelian);
+            System.out.println("4");
             hasil3 = this.articleMapper.inputPembelian3(pembelian);
+            System.out.println("3");
             hasil2 = this.articleMapper.inputStockWithPembelianId(pembelian);
-            if(hasil2 != 1 || hasil3 != 1){
+            if(hasil1 != 1 || hasil2 != 1 || hasil3 != 1){
                 transactionManager.rollback(txStatus);
             }
             
@@ -346,7 +444,7 @@ public class GreetingController {
     
     @Transactional
     @CrossOrigin(origins = cors)
-    @PostMapping("/insertStock")
+    @PostMapping(url+"/insertStock")
     public Integer insertStock(@RequestBody Stock stock) {
         TransactionStatus txStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
         Integer hasil = 0;
@@ -361,12 +459,12 @@ public class GreetingController {
     }
     
     @CrossOrigin(origins = cors)
-    @PostMapping("/getStock")
+    @PostMapping(url+"/getStock")
     public ArrayList<Stock> getStock(@RequestBody Stock stock) {
         ArrayList<Stock>  hasil = new ArrayList<>();
         try {
             checkLogin(stock);
-            hasil = this.articleMapper.getStockList();
+            hasil = this.articleMapper.getStockList(stock.getMnama());
             
         } catch (Exception ex) {
             printStackTrace(ex);
@@ -376,12 +474,12 @@ public class GreetingController {
     }
     
     @CrossOrigin(origins = cors)
-    @PostMapping("/getStockHistoryList")
+    @PostMapping(url+"/getStockHistoryList")
     public ArrayList<Stock> getStockHistoryList(@RequestBody Stock stock) {
         ArrayList<Stock>  hasil = new ArrayList<>();
         try {
             checkLogin(stock);
-            hasil = this.articleMapper.getStockHistoryList();
+            hasil = this.articleMapper.getStockHistoryList(stock.getMnama());
             
         } catch (Exception ex) {
             printStackTrace(ex);
@@ -391,7 +489,7 @@ public class GreetingController {
     }
     
     @CrossOrigin(origins = cors)
-    @PostMapping("/getStockLatestStockById")
+    @PostMapping(url+"/getStockLatestStockById")
     public Stock getStockLatestStockById(@RequestBody Stock stock) {
         Stock  hasil = new Stock();
         try {
@@ -406,7 +504,7 @@ public class GreetingController {
     }
     
     @CrossOrigin(origins = cors)
-    @PostMapping("/getStockByMaterialId")
+    @PostMapping(url+"/getStockByMaterialId")
     public ArrayList<Stock> getStockByMaterialId(@RequestBody Stock stock) {
         ArrayList<Stock>  hasil = new ArrayList<>();
         try {
@@ -415,141 +513,6 @@ public class GreetingController {
         } catch (Exception ex) {
             printStackTrace(ex);
         }
-        return hasil;
-    }
-    
-    @Transactional
-    @CrossOrigin(origins = cors)
-    @PostMapping("/doLogin")
-    public ArrayList<Iip> doLogin(@RequestBody Ilogin ilogin){
-        Iip hasil = generateToken();
-        Ilogin login = new Ilogin();
-        String role = "";
-        
-        TransactionStatus txStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
-        try{
-            if(null != ilogin.getNama() && !ilogin.getNama().isBlank()
-                    && null != ilogin.getPass() && !ilogin.getPass().isBlank()){
-                login = this.articleMapper.checklogin(ilogin.getNama(), ilogin.getPass());
-            }
-
-            if(null == login.getRole() || login.getRole().isEmpty() || login.getRole().isBlank()){
-                hasil.setToken("22");
-            } else {
-                hasil.setRole(login.getRole());
-                this.articleMapper.updateLoginAktif(ilogin);
-                this.articleMapper.insertLogin(ilogin, hasil.getToken());
-                hasil.setIsSuccess(1);
-            }
-        } catch(Exception e){
-            transactionManager.rollback(txStatus);
-            printStackTrace(e);
-        }
-        
-        ArrayList ar = new ArrayList();
-        ar.add(hasil);
-        
-        return ar;
-    }
-    
-    @Transactional
-    @CrossOrigin(origins = cors)
-    @PostMapping("/doLogout")
-    public ArrayList<Ilogin> doLogout(@RequestBody Ilogin ilogin){
-        Iip hasil = generateToken();
-        Ilogin login = new Ilogin();
-        String role = "";
-        
-        TransactionStatus txStatus = transactionManager.getTransaction(new DefaultTransactionDefinition());
-        try{
-            if(null != ilogin.getNama() && !ilogin.getNama().isBlank()
-                    && null != ilogin.getPass() && !ilogin.getPass().isBlank()){
-                login = this.articleMapper.checklogin(ilogin.getNama(), ilogin.getPass());
-            }
-            
-            this.articleMapper.updateLoginAktif(ilogin);
-
-        } catch(Exception e){
-            transactionManager.rollback(txStatus);
-            printStackTrace(e);
-        }
-        
-        ArrayList ar = new ArrayList();
-        ar.add(ilogin);
-        
-        return ar;
-    }
-    
-    @CrossOrigin(origins = cors)
-    @PostMapping("/stillLogin")
-    public Iip stillLogin(@RequestBody Iip iip){
-        Iip hasil = new Iip();
-        
-        try{
-            if(null == iip){
-                throw new Exception("Please login");
-            }
-            hasil = this.articleMapper.stillLogin(iip.getIp(), iip.getToken());
-            
-            Calendar cal1 = Calendar.getInstance();
-            Calendar cal2 = Calendar.getInstance();
-            cal2.setTime(hasil.getTanggal());
-            if(ChronoUnit.HOURS.between(cal2.toInstant(),cal1.toInstant())>16){
-                this.articleMapper.NonAktifToken(hasil);
-                hasil.setToken(null);
-                throw new Exception("Please login cause duration = " +ChronoUnit.DAYS.between(cal2.toInstant(),cal1.toInstant()));
-            }
-        } catch(Exception e){
-            printStackTrace(e);
-        }
-        return hasil;
-    }
-    
-    private int checkLogin(Result result) throws Exception{
-        if(null == result || result.getIp().isEmpty() || result.getIp().isBlank() || result.getToken().isEmpty() || result.getToken().isBlank())
-        {
-            throw new Exception("Please login");
-        } else if (1 == this.articleMapper.stillLogin(result.getIp(), result.getToken()).getIsSuccess()){
-
-            return 1;
-        } else {
-            throw new Exception("Please login");
-        }
-    }
-    
-    public Iip generateToken(){
-        SecureRandom sr = new SecureRandom();
-        MessageDigest md;
-        String token = "";
-        Iip hasil = new Iip();
-        hasil.setIsSuccess(0);
-        StringBuilder sb = new StringBuilder();
-        boolean repeat = true;
-                
-        try {
-            while(repeat){
-                System.out.println("Getting Token");    
-                md = MessageDigest.getInstance("MD5");
-                md.update(sr.generateSeed(32));
-                byte[] b = md.digest();
-                sb = new StringBuilder();
-
-                for (int i = 0; i < b.length; i++)
-                    sb.append(Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1));
-
-                Integer use = articleMapper.checkUseToken(sb.toString());
-                if(null== use){
-                    repeat = false;
-                }
-            }
-            
-        } catch (NoSuchAlgorithmException ex) {
-            java.util.logging.Logger.getLogger(GreetingController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        hasil.setToken(sb.toString());
-        hasil.setIsSuccess(1);
-        
         return hasil;
     }
 }

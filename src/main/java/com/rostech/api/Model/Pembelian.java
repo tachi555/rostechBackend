@@ -22,11 +22,13 @@ public class Pembelian extends Result {
     private Integer jumlah;
     private Integer total;
     private String ket;
+    private Date from;
+    private Date to;
 
     public Pembelian() {
     }
 
-    public Pembelian(Long id, Long mid, String mnama, Long tid, String tnama, String tanggal, Integer persatuan, Integer jumlah, Integer total, String ket) {
+    public Pembelian(Long id, Long mid, String mnama, Long tid, String tnama, String tanggal, Integer persatuan, Integer jumlah, Integer total, String ket, Date from, Date to) {
         this.id = id;
         this.mid = mid;
         this.mnama = mnama;
@@ -37,10 +39,12 @@ public class Pembelian extends Result {
         this.jumlah = jumlah;
         this.total = total;
         this.ket = ket;
+        this.from = from;
+        this.to = to;
     }
 
-    public Pembelian(Long id, Long mid, String mnama, Long tid, String tnama, String tanggal, Integer persatuan, Integer jumlah, Integer total, String ket, Integer isSuccess, String notes, String ip, String token) {
-        super(isSuccess, notes, ip, token);
+    public Pembelian(Long id, Long mid, String mnama, Long tid, String tnama, String tanggal, Integer persatuan, Integer jumlah, Integer total, String ket, Date from, Date to, Integer isSuccess, String notes, String ip, String token, String nama, String role, String user_id, String group_id) {
+        super(isSuccess, notes, ip, token, nama, role, user_id, group_id);
         this.id = id;
         this.mid = mid;
         this.mnama = mnama;
@@ -51,6 +55,24 @@ public class Pembelian extends Result {
         this.jumlah = jumlah;
         this.total = total;
         this.ket = ket;
+        this.from = from;
+        this.to = to;
+    }
+
+    public Date getFrom() {
+        return from;
+    }
+
+    public void setFrom(Date from) {
+        this.from = from;
+    }
+
+    public Date getTo() {
+        return to;
+    }
+
+    public void setTo(Date to) {
+        this.to = to;
     }
     
     public Long getId() {

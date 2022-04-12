@@ -14,12 +14,52 @@ public class Result {
     String notes;
     String ip;
     String token;
+    String nama;
+    String role;
+    String user_id;
+    String group_id;
 
-    public Result(Integer isSuccess, String notes, String ip, String token) {
+    public Result(Integer isSuccess, String notes, String ip, String token, String nama, String role, String user_id, String group_id) {
         this.isSuccess = isSuccess;
         this.notes = notes;
         this.ip = ip;
         this.token = token;
+        this.nama = nama;
+        this.role = role;
+        this.user_id = user_id;
+        this.group_id = group_id;
+    }
+
+    public String getNama() {
+        return nama;
+    }
+
+    public void setNama(String nama) {
+        this.nama = nama;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getGroup_id() {
+        return group_id;
+    }
+
+    public void setGroup_id(String group_id) {
+        this.group_id = group_id;
     }
     
     public Result() {

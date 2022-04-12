@@ -24,8 +24,8 @@ public class Stock extends Result {
     public Stock() {
     }
 
-    public Stock(Long id, Long mid, Integer perubahan, Integer total, Date tanggal, String ket, String mnama, Long pembelianId, Integer isSuccess, String notes, String ip, String token) {
-        super(isSuccess, notes, ip, token);
+    public Stock(Long id, Long mid, Integer perubahan, Integer total, Date tanggal, String ket, String mnama, Long pembelianId, Integer isSuccess, String notes, String ip, String token, String nama, String role, String user_id, String group_id) {
+        super(isSuccess, notes, ip, token, nama, role, user_id, group_id);
         this.id = id;
         this.mid = mid;
         this.perubahan = perubahan;
